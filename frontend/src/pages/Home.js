@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import axios from 'axios';
+import api from '../config/axios';
 import BookCard from '../components/BookCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -12,7 +12,7 @@ const Home = () => {
   useEffect(() => {
     const fetchFeaturedBooks = async () => {
       try {
-        const response = await axios.get('/api/books/featured');
+        const response = await api.get('/api/books/featured');
         setFeaturedBooks(response.data.books);
       } catch (error) {
         console.error('Error fetching featured books:', error);
@@ -23,7 +23,6 @@ const Home = () => {
 
     fetchFeaturedBooks();
   }, []);
-
 
   return (
     <div className="min-h-screen">
@@ -57,7 +56,7 @@ const Home = () => {
         </div>
       </section>
 
-     
+      
 
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

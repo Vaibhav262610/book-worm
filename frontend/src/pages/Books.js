@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, X } from 'lucide-react';
-import axios from 'axios';
+import api from '../config/axios';
 import BookCard from '../components/BookCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -51,7 +51,7 @@ const Books = () => {
         params.genre = selectedGenre;
       }
 
-      const response = await axios.get('/api/books', { params });
+      const response = await api.get('/api/books', { params });
       setBooks(response.data.books);
       setTotalPages(response.data.totalPages);
     } catch (error) {
