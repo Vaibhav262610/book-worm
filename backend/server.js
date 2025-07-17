@@ -21,11 +21,25 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://book-worm-nu.vercel.app'
+];
+
+// Dynamically allow Vercel preview URLs
+const dynamicOriginCheck = function (origin, callback) {
+  if (!origin || allowedOrigins.includes(origin) || origin?.includes('.vercel.app')) {
+    callback(null, true);
+  } else {
+    callback(new Error('Not allowed by CORS'));
+  }
+};
+
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://book-worm-nu.vercel.app'] 
-    : ['http://localhost:3000'],
-  credentials: true
+  origin: dynamicOriginCheck,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json({ limit: '10mb' }));
