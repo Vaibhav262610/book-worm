@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -14,7 +15,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(helmet());
-
+app.use(cors({
+  origin: 'https://book-worm-nu.vercel.app', // your frontend deployed URL
+  credentials: true // if you're using cookies/auth
+}));
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100
