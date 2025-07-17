@@ -26,21 +26,25 @@ const allowedOrigins = [
   'https://book-worm-nu.vercel.app'
 ];
 
-// Dynamically allow Vercel preview URLs
-const dynamicOriginCheck = function (origin, callback) {
-  if (!origin || allowedOrigins.includes(origin) || origin?.includes('.vercel.app')) {
-    callback(null, true);
-  } else {
-    callback(new Error('Not allowed by CORS'));
-  }
-};
-
-app.use(cors({
-  origin: dynamicOriginCheck,
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (
+      !origin || 
+      allowedOrigins.includes(origin) || 
+      /^https:\/\/book-worm-[a-z0-9]+-vaibhav262610s-projects\.vercel\.app$/.test(origin)
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS: ' + origin));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-}));
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Preflight
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
