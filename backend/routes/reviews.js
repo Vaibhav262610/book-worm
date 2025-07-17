@@ -344,4 +344,19 @@ router.get('/user/:userId', [
   }
 });
 
+router.get('/book/:bookId', async (req, res) => {
+  try {
+    const { bookId } = req.params;
+
+    const reviews = await Review.find({ bookId })
+      .populate('userId', 'username avatar')
+      .sort({ createdAt: -1 });
+
+    res.json({ reviews });
+  } catch (error) {
+    console.error('Error fetching reviews by bookId:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router; 
