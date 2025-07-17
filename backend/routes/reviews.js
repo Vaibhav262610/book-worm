@@ -358,5 +358,18 @@ router.get('/book/:bookId', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+router.get('/user/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
 
+    const reviews = await Review.find({ userId })
+      .populate('bookId', 'title coverImage')
+      .sort({ createdAt: -1 });
+
+    res.json({ reviews });
+  } catch (error) {
+    console.error('Error fetching user reviews:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 module.exports = router; 
