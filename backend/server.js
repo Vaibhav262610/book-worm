@@ -22,10 +22,10 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.use(cors({
-  origin: 'https://book-worm-nu.vercel.app',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://book-worm-nu.vercel.app'] 
+    : ['http://localhost:3000'],
+  credentials: true
 }));
 
 app.use(express.json({ limit: '10mb' }));
